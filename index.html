@@ -112,9 +112,9 @@
         }
 
         .section:not(.first-section) .container {
-            background: rgba(250, 246, 235, 0.88);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            background: rgba(250, 246, 235, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border-radius: var(--radius-3xl);
             padding: var(--space-xl) var(--space-lg);
             box-shadow: 0 25px 55px -22px rgba(0, 0, 0, 0.4);
@@ -124,6 +124,9 @@
             .section:not(.first-section) .container {
                 padding: var(--space-lg) var(--space-md);
                 border-radius: var(--radius-md);
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                background: rgba(250, 246, 235, 0.96);
             }
         }
 
@@ -175,35 +178,26 @@
             padding: var(--space-lg) var(--space-md);
             text-align: center;
             position: relative;
-            clip-path: inset(0 0 100% 0);
-            transition: clip-path 1s ease;
-            overflow: hidden;
             width: 100%;
             background: transparent;
         }
 
-        .section.visible {
-            clip-path: inset(0 0 0 0);
+        .section .container {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            will-change: opacity, transform;
         }
 
         .section.visible .container {
-            animation: fadeUp 0.8s ease;
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .first-section {
-            clip-path: none;
+        .first-section .container {
+            opacity: 1;
+            transform: none;
+            transition: none;
         }
 
         /* ----- КАЛЕНДАРЬ ----- */
@@ -649,7 +643,7 @@
 
         /* ----- СВАДЕБНЫЙ КООРДИНАТОР ----- */
         .coordinator-card {
-            max-width: 600px;
+            max-width: 420px;
             margin: 0 auto;
             padding: var(--space-lg) var(--space-md);
             border: 1px solid rgba(139, 90, 43, 0.35);
@@ -783,16 +777,16 @@
 
         .dresscode-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(4, 70px);
             gap: var(--space-sm);
+            justify-content: center;
             max-width: 420px;
             margin: 0 auto var(--space-md);
         }
 
         .dresscode-swatch {
-            width: 100%;
-            height: 100%;
-            aspect-ratio: 1 / 1;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.15);
             overflow: hidden;
@@ -820,8 +814,18 @@
 
         @media (max-width: 480px) {
             .dresscode-grid {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(4, 60px);
                 gap: 8px;
+            }
+
+            .dresscode-swatch {
+                width: 60px;
+                height: 60px;
+            }
+
+            .dresscode-extra {
+                grid-template-columns: repeat(2, 60px) !important;
+                justify-content: center;
             }
         }
 

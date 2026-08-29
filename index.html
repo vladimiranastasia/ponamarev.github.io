@@ -44,7 +44,6 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-snap-type: y mandatory;
         }
 
         body {
@@ -55,33 +54,77 @@
             transition: opacity 0.5s;
             position: relative;
             overflow-x: hidden;
-            background: #f3e9da;
+            background: #4a5636;
         }
 
         body.loaded {
             opacity: 1;
         }
 
-        /* ========== ФОН: GIF на весь экран, яркость 1.25 ========== */
-        .bg-gif {
+        /* ========== ФОН: анимированный оливковый градиент ========== */
+        .bg-olive {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
             z-index: -2;
             pointer-events: none;
-            filter: brightness(1.25);
+            background: linear-gradient(135deg, #3f4d2c 0%, #5c6b3f 30%, #7c8a5a 55%, #4a5636 80%, #3a4527 100%);
+            background-size: 280% 280%;
+            animation: oliveDrift 22s ease-in-out infinite;
         }
 
-        /* ========== ТЕКСТ (без подложек) ========== */
+        .bg-olive::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.10), rgba(0, 0, 0, 0.28) 85%);
+        }
+
+        @keyframes oliveDrift {
+            0% {
+                background-position: 0% 30%;
+            }
+
+            50% {
+                background-position: 100% 70%;
+            }
+
+            100% {
+                background-position: 0% 30%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bg-olive {
+                animation: none;
+            }
+        }
+
+        /* ========== ТЕКСТ / КАРТОЧКИ ========== */
         .container {
             width: 100%;
             max-width: 680px;
             margin: 0 auto;
             position: relative;
             z-index: 10;
+        }
+
+        .section:not(.first-section) .container {
+            background: rgba(250, 246, 235, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: var(--radius-3xl);
+            padding: var(--space-xl) var(--space-lg);
+            box-shadow: 0 25px 55px -22px rgba(0, 0, 0, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .section:not(.first-section) .container {
+                padding: var(--space-lg) var(--space-md);
+                border-radius: var(--radius-md);
+            }
         }
 
         .section p:not(.program-description),
@@ -137,7 +180,6 @@
             overflow: hidden;
             width: 100%;
             background: transparent;
-            scroll-snap-align: start;
         }
 
         .section.visible {
@@ -485,6 +527,13 @@
             text-align: center;
         }
 
+        .date-divider {
+            width: 70px;
+            height: 2px;
+            background: rgba(139, 90, 43, 0.35);
+            margin: var(--space-xl) auto;
+        }
+
         /* Форма (Google Forms) – лёгкая подложка для читаемости */
         .google-form-wrapper {
             position: relative;
@@ -778,9 +827,32 @@
 
         .first-section .container {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: var(--space-lg);
             min-height: 80vh;
+        }
+
+        .hero-photo {
+            width: min(260px, 62vw);
+            aspect-ratio: 3 / 4;
+            border-radius: var(--radius-3xl);
+            overflow: hidden;
+            box-shadow: 0 25px 55px -18px rgba(0, 0, 0, 0.55);
+            border: 3px solid rgba(250, 246, 235, 0.85);
+        }
+
+        .hero-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .names.font-script {
+            color: #faf6eb;
+            text-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
         }
 
         .scroll-hint {
@@ -793,10 +865,9 @@
             animation: bounce 2s infinite;
             z-index: 20;
             pointer-events: none;
-            color: #000;
+            color: #faf6eb;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
         }
-
-        @keyframes bounce {
 
             0%,
             100% {
@@ -943,10 +1014,8 @@
         <div class="loader-text">Загрузка приглашения...</div>
     </div>
 
-    <!-- Фон: GIF с яркостью 1.25 -->
-    <img class="bg-gif"
-        src="Background.jpg"
-        alt="фон" loading="eager">
+    <!-- Фон: анимированный оливковый градиент -->
+    <div class="bg-olive"></div>
 
     <button class="scroll-top" id="scrollTop" aria-label="Наверх">↑</button>
     <button class="music-toggle" id="musicToggle" aria-label="Включить/выключить музыку">🎵</button>
@@ -957,6 +1026,9 @@
             Владимир и Анастасия</h1>
         <section class="section first-section" id="section-hero">
             <div class="container">
+                <div class="hero-photo">
+                    <img src="images/photo.jpg" alt="Владимир и Анастасия" loading="eager">
+                </div>
                 <div class="names font-script" style="font-size:var(--fs-xxl);">Владимир & Анастасия</div>
             </div>
             <div class="scroll-hint">↓</div>
@@ -982,7 +1054,9 @@
                 <div class="font-script fs-xxl">До свадьбы</div>
                 <div id="timer" class="timer"></div>
                 <div class="labels"><span>ДНИ</span><span>ЧАСЫ</span><span>МИН</span><span>СЕК</span></div>
-                
+
+                <div class="date-divider"></div>
+
                 <div class="font-script fs-xxl">Дата</div>
                 <h2 class="date-heading">12 ДЕКАБРЯ 2026</h2>
                 <div class="calendar" id="calendar"></div>
